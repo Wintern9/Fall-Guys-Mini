@@ -39,7 +39,7 @@ public class Player_StateMovement : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        if (!PlMove.GetGround())
+        if (PlMove.GetJump())
         {
             currentState = PlayerState.MovingJump;
         }

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Player_Movement : MonoBehaviour
@@ -11,6 +11,8 @@ public class Player_Movement : MonoBehaviour
     public Transform cameraTransform;
     CapsuleCollider capsuleCollider;
 
+    bool _jump = false;
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -19,6 +21,7 @@ public class Player_Movement : MonoBehaviour
 
     void FixedUpdate()
     {
+        CheckGround();
         JumpLogic();
         MovementLogic();
     }
@@ -29,10 +32,10 @@ public class Player_Movement : MonoBehaviour
         {
             Vector3 cameraForward = cameraTransform.forward;
             cameraForward.y = 0f;
-            cameraForward.Normalize(); 
+            cameraForward.Normalize();
 
             Quaternion targetRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * 10f);  // Ïëàâíûé ïîâîðîò
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * 10f);
         }
     }
 
@@ -54,33 +57,43 @@ public class Player_Movement : MonoBehaviour
     {
         if (Input.GetAxis("Jump") > 0)
         {
-            if (_isGrounded)
+            if (_isGrounded && !_jump)
             {
                 _rb.AddForce(Vector3.up * JumpForce);
+                _jump = true;
             }
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void CheckGround()
     {
-        IsGroundedUpate(collision, true);
-    }
+        float rayDistance = capsuleCollider.bounds.extents.y + 0.1f;
+        Vector3 rayOrigin = transform.position;
 
-    void OnCollisionExit(Collision collision)
-    {
-        IsGroundedUpate(collision, false);
-    }
+        Ray ray = new Ray(rayOrigin, Vector3.down);
+        RaycastHit hit;
 
-    private void IsGroundedUpate(Collision collision, bool value)
-    {
-        if (collision.gameObject.tag == ("Ground"))
+        if (Physics.Raycast(ray, out hit, rayDistance))
         {
-            _isGrounded = value;
+            if (hit.collider.CompareTag("Ground"))
+            {
+                _isGrounded = true;
+            }
+        }
+        else
+        {
+            _isGrounded = false;
         }
     }
 
-    public bool GetGround()
+    public bool GetJump()
     {
-        return _isGrounded;
+        return _jump;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+            _jump = false;
     }
 }

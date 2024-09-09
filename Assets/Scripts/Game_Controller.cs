@@ -12,19 +12,24 @@ public class Game_Controller : MonoBehaviour
 
     public GameObject UI_GameObject;
 
+    private float _timeResult;
+
     void Start()
     {
         animatorCamera = Camera.GetComponent<Animator>();
         controllerCamera = Camera.GetComponent<Player_CameraContoller>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (animatorCamera.GetCurrentAnimatorStateInfo(0).IsName("Game"))
         {
             controllerCamera.enabled = true;
             animatorCamera.enabled = false;
         }
+
+        _timeResult += Time.fixedDeltaTime;
+        Debug.Log(_timeResult);
     }
 
     public void UI_ButtonStartDown()
