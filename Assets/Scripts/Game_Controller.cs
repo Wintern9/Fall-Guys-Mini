@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Game_Controller : MonoBehaviour
@@ -13,11 +14,22 @@ public class Game_Controller : MonoBehaviour
     public GameObject UI_GameObject;
 
     private float _timeResult;
+    static public float BestResult;
+
+    public TextMeshProUGUI TextMeshProUGUI;
+    public TextMeshProUGUI TextMeshProUGUIBest;
+
+    static public bool GameOver = false;
+    static public bool Win = false;
 
     void Start()
     {
+        GameOver = true;
+        Win = false;
         animatorCamera = Camera.GetComponent<Animator>();
         controllerCamera = Camera.GetComponent<Player_CameraContoller>();
+
+        TextMeshProUGUIBest.text = ConvertFloatToTime(BestResult);
     }
 
     void FixedUpdate()
@@ -28,8 +40,28 @@ public class Game_Controller : MonoBehaviour
             animatorCamera.enabled = false;
         }
 
-        _timeResult += Time.fixedDeltaTime;
+        if (!GameOver)
+        {
+            _timeResult += Time.fixedDeltaTime;
+
+            TextMeshProUGUI.text = ConvertFloatToTime(_timeResult);
+        }
+
+        if (_timeResult < BestResult && Win)
+        {
+            BestResult = _timeResult;
+        }
+
         Debug.Log(_timeResult);
+    }
+
+    string ConvertFloatToTime(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60); // Получаем количество минут
+        int seconds = Mathf.FloorToInt(time % 60); // Получаем оставшиеся секунды
+
+        // Возвращаем строку в формате "MM:SS"
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     public void UI_ButtonStartDown()
@@ -39,8 +71,13 @@ public class Game_Controller : MonoBehaviour
 
     private void StartGame()
     {
+
+        GameOver = false;
         Player_Controller.SetBool("Start", true);
         animatorCamera.SetBool("Start", true);
         UI_GameObject.SetActive(false);
+
+        Player_Controller.gameObject.GetComponent<Player_Movement>().enabled = true;
+
     }
 }

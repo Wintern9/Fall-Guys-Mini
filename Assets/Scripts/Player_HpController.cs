@@ -6,6 +6,9 @@ using UnityEngine;
 public class Player_HpController : MonoBehaviour
 {
     private int _playerHP = 100;
+    public GameObject UIDeath;
+
+    public Camera camera;
 
     public int PlayerHP
     {
@@ -15,7 +18,7 @@ public class Player_HpController : MonoBehaviour
             if (_playerHP != value)
             {
                 _playerHP = value;
-                OnTextChanged();  // „B„„x„„r„p„u„} „}„u„„„€„t „„‚„y „y„x„}„u„~„u„~„y„y „x„~„p„‰„u„~„y„‘
+                OnTextChanged();
 
                 if (_playerHP <= 0)
                 {
@@ -39,6 +42,13 @@ public class Player_HpController : MonoBehaviour
 
     void PlayerDeath()
     {
-        Debug.Log("Death");
+        UIDeath.SetActive(true);
+        gameObject.GetComponent<Player_Movement>().enabled = false;
+        camera.GetComponent<Player_CameraContoller>().enabled = false;
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+
+        Game_Controller.GameOver = true;
     }
 }

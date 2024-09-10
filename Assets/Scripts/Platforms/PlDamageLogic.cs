@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlDamageLogic : MonoBehaviour
@@ -39,15 +40,25 @@ public class PlDamageLogic : MonoBehaviour
         Invoke("PlatformColorRestart", 1f);
         materialPlatform.color = Color.red;
 
-        if (player != null)
+        if (_playerCollision == true)
         {
-            Collider playerCollider = player.GetComponent<Collider>();
-
-            if (colliderPlatform.bounds.Intersects(playerCollider.bounds))
-            {
-                player_HpController.PlayerHP -= 100;
-            }
+            player_HpController.PlayerHP -= 100;
+            
         }
+    }
+
+    bool _playerCollision = false ;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+            _playerCollision = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+            _playerCollision = false;
     }
 
     private void PlatformColorRestart()
