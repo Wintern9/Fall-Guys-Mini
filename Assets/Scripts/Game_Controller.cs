@@ -14,7 +14,7 @@ public class Game_Controller : MonoBehaviour
     public GameObject UI_GameObject;
 
     private float _timeResult;
-    static public float BestResult;
+    static public float BestResult = 999999f;
 
     public TextMeshProUGUI TextMeshProUGUI;
     public TextMeshProUGUI TextMeshProUGUIBest;
@@ -29,7 +29,8 @@ public class Game_Controller : MonoBehaviour
         animatorCamera = Camera.GetComponent<Animator>();
         controllerCamera = Camera.GetComponent<Player_CameraContoller>();
 
-        TextMeshProUGUIBest.text = ConvertFloatToTime(BestResult);
+        if(BestResult != 999999f)
+            TextMeshProUGUIBest.text = ConvertFloatToTime(BestResult);
     }
 
     void FixedUpdate()
@@ -57,10 +58,9 @@ public class Game_Controller : MonoBehaviour
 
     string ConvertFloatToTime(float time)
     {
-        int minutes = Mathf.FloorToInt(time / 60); // Получаем количество минут
-        int seconds = Mathf.FloorToInt(time % 60); // Получаем оставшиеся секунды
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
 
-        // Возвращаем строку в формате "MM:SS"
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 

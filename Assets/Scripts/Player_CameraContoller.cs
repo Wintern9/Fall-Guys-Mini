@@ -8,6 +8,7 @@ public class Player_CameraContoller : MonoBehaviour
     public float distance = 5.0f;
     public float height = 2.0f;  
     public float rotationSpeed = 5.0f;
+    public float velocityCamera = 5.0f;
     public float collisionRadius = 0.5f;
 
     private float currentX = 0.0f;
@@ -45,7 +46,7 @@ public class Player_CameraContoller : MonoBehaviour
             desiredPosition = hit.point;
         }
 
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * rotationSpeed);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * velocityCamera);
 
         transform.LookAt(target.position + Vector3.up * height);
     }

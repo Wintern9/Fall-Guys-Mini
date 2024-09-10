@@ -21587,6 +21587,7 @@ MonoBehaviour:
   distance: 5
   height: 0
   rotationSpeed: 5
+  velocityCamera: 1000
   collisionRadius: 0.5
 --- !u!95 &963194230
 Animator:
